@@ -5,12 +5,16 @@
 }
 
 .layout-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 1rem 1.5rem;
   background: var(--header-bg, #1a1a2e);
   border-bottom: 1px solid var(--border, #2a2a4a);
+  backdrop-filter: blur(8px);
 }
 
 .layout-logo {

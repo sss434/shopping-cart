@@ -1,9 +1,10 @@
 import { Link, Outlet } from 'react-router-dom';
-import { useCart } from '../context/CartContext';
+import { useSelector } from 'react-redux';
+import { selectTotalItems } from '../../store/cartSlice';
 import './Layout.css';
 
 export default function Layout() {
-  const { totalItems } = useCart();
+  const totalItems = useSelector(selectTotalItems);
 
   return (
     <div className="layout">

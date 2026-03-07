@@ -1,9 +1,19 @@
 import { Link } from 'react-router-dom';
-import { useCart } from '../context/CartContext';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  selectItems,
+  selectTotalItems,
+  selectTotalSum,
+  updateQuantity,
+  removeFromCart,
+} from '../../store/cartSlice';
 import './Cart.css';
 
 export default function Cart() {
-  const { items, totalItems, totalSum, updateQuantity, removeFromCart } = useCart();
+  const dispatch = useDispatch();
+  const items = useSelector(selectItems);
+  const totalItems = useSelector(selectTotalItems);
+  const totalSum = useSelector(selectTotalSum);
 
   if (items.length === 0) {
     return (
@@ -32,7 +42,7 @@ export default function Cart() {
               <button
                 type="button"
                 className="cart-item-btn"
-                onClick={() => updateQuantity(item.id, -1)}
+                onClick={() => dispatch(updateQuantity({ id: item.id, delta: -1 }))}
                 aria-label="Уменьшить количество"
               >
                 −
@@ -41,7 +51,7 @@ export default function Cart() {
               <button
                 type="button"
                 className="cart-item-btn"
-                onClick={() => updateQuantity(item.id, 1)}
+                onClick={() => dispatch(updateQuantity({ id: item.id, delta: 1 }))}
                 aria-label="Увеличить количество"
               >
                 +
@@ -53,7 +63,7 @@ export default function Cart() {
             <button
               type="button"
               className="cart-item-remove"
-              onClick={() => removeFromCart(item.id)}
+              onClick={() => dispatch(removeFromCart(item.id))}
               aria-label="Удалить"
             >
               Удалить
