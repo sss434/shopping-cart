@@ -1,0 +1,64 @@
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.layout-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background: var(--header-bg, #1a1a2e);
+  border-bottom: 1px solid var(--border, #2a2a4a);
+}
+
+.layout-logo {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--link);
+  text-decoration: none;
+}
+
+.layout-logo:hover {
+  color: var(--link-hover);
+}
+
+.layout-cart-link {
+  position: relative;
+  padding: 0.5rem 1rem;
+  color: var(--link);
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.layout-cart-link:hover {
+  background: var(--hover-bg, rgba(255, 255, 255, 0.06));
+  color: var(--link-hover);
+}
+
+.layout-cart-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+  text-align: center;
+  color: #fff;
+  background: var(--accent, #646cff);
+  border-radius: 10px;
+}
+
+.layout-main {
+  flex: 1;
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
