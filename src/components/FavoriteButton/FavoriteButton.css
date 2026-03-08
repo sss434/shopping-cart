@@ -1,0 +1,45 @@
+.fav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card-bg, #16213e);
+  border: 1px solid var(--border, #2a2a4a);
+  border-radius: 50%;
+  color: var(--muted, #94a3b8);
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, transform 0.15s;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.fav-btn:hover {
+  color: #e57373;
+  border-color: #e57373;
+}
+
+.fav-btn:active {
+  transform: scale(0.9);
+}
+
+.fav-btn--active {
+  color: #e57373;
+  border-color: #e57373;
+}
+
+.fav-btn--sm {
+  width: 2rem;
+  height: 2rem;
+  font-size: 1rem;
+}
+
+.fav-btn--md {
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.25rem;
+}
+
+.fav-btn--lg {
+  width: 3rem;
+  height: 3rem;
+  font-size: 1.5rem;
+}

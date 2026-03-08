@@ -1,0 +1,38 @@
+.favorites-title {
+  margin: 0 0 1.5rem;
+  font-size: 1.75rem;
+}
+
+.favorites-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.favorites-empty p {
+  margin: 0 0 1rem;
+  color: var(--muted, #94a3b8);
+}
+
+.favorites-link {
+  color: var(--link);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.favorites-link:hover {
+  color: var(--link-hover);
+  text-decoration: underline;
+}
+
+.favorites-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.favorites-grid > li {
+  min-width: 0;
+}

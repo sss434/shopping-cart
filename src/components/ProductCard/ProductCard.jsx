@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../../store/cartSlice';
+import FavoriteButton from '../FavoriteButton';
 import './ProductCard.css';
 
 export default function ProductCard({ product }) {
@@ -29,8 +30,9 @@ export default function ProductCard({ product }) {
           className="product-card-add"
           onClick={() => dispatch(addToCart(product))}
         >
-          Добавить в корзину
+          В корзину
         </button>
+        <FavoriteButton productId={product.id} size="sm" />
       </div>
     </article>
   );

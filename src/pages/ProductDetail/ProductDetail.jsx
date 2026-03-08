@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectProductById } from '../../store/productsSlice';
 import { addToCart } from '../../store/cartSlice';
+import FavoriteButton from '../../components/FavoriteButton';
 import './ProductDetail.css';
 
 export default function ProductDetail() {
@@ -30,7 +31,10 @@ export default function ProductDetail() {
           />
         </div>
         <div className="pd-info">
-          <h1 className="pd-title">{product.title}</h1>
+          <div className="pd-title-row">
+            <h1 className="pd-title">{product.title}</h1>
+            <FavoriteButton productId={product.id} size="lg" />
+          </div>
           <p className="pd-price">{product.price.toLocaleString('ru-RU')} ₽</p>
           <p className="pd-description">
             Отличный выбор для работы и отдыха. Надёжное качество, современный дизайн
