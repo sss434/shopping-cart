@@ -1,0 +1,39 @@
+{
+  "products": [
+    {
+      "id": "1",
+      "title": "Беспроводные наушники",
+      "price": 3490,
+      "image": "https://picsum.photos/seed/headphones/300/300",
+      "description": "Качественный звук, активное шумоподавление, до 30 часов работы от аккумулятора."
+    },
+    {
+      "id": "2",
+      "title": "Клавиатура механическая",
+      "price": 5990,
+      "image": "https://picsum.photos/seed/keyboard/300/300",
+      "description": "Тактильные переключатели, RGB-подсветка, алюминиевый корпус."
+    },
+    {
+      "id": "3",
+      "title": "USB-C концентратор",
+      "price": 2190,
+      "image": "https://picsum.photos/seed/hub/300/300",
+      "description": "7-в-1: HDMI 4K, 3× USB-A, USB-C PD 100Вт, SD и microSD."
+    },
+    {
+      "id": "4",
+      "title": "Внешний SSD 1 ТБ",
+      "price": 8990,
+      "image": "https://picsum.photos/seed/ssd/300/300",
+      "description": "Скорость чтения до 1050 МБ/с, ударопрочный корпус, USB 3.2 Gen 2."
+    },
+    {
+      "id": "5",
+      "title": "Веб-камера Full HD",
+      "price": 4290,
+      "image": "https://picsum.photos/seed/webcam/300/300",
+      "description": "1080p/30fps, автофокус, встроенный стереомикрофон, крепление на монитор."
+    }
+  ]
+}

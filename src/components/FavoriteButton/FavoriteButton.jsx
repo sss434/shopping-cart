@@ -1,20 +1,21 @@
-import { useSelector, useDispatch } from 'react-redux';
-import { selectIsFavorite, toggleFavorite } from '../../store/favoritesSlice';
-import './FavoriteButton.css';
+import { useSelector, useDispatch } from "react-redux";
+import { selectIsFavorite, toggleFavorite } from "../../store/favoritesSlice";
+import "./FavoriteButton.css";
 
-export default function FavoriteButton({ productId, size = 'md' }) {
+export default function FavoriteButton({ productId, size = "md" }) {
+  // TODO - компоненты должны быть тупыми, лучше не класть какую-либо логику в компонент кнопки
   const dispatch = useDispatch();
   const isFav = useSelector(selectIsFavorite(productId));
 
   return (
     <button
       type="button"
-      className={`fav-btn fav-btn--${size} ${isFav ? 'fav-btn--active' : ''}`}
+      className={`fav-btn fav-btn--${size} ${isFav ? "fav-btn--active" : ""}`}
       onClick={() => dispatch(toggleFavorite(productId))}
-      aria-label={isFav ? 'Убрать из избранного' : 'Добавить в избранное'}
-      title={isFav ? 'Убрать из избранного' : 'В избранное'}
+      aria-label={isFav ? "Убрать из избранного" : "Добавить в избранное"}
+      title={isFav ? "Убрать из избранного" : "В избранное"}
     >
-      {isFav ? '♥' : '♡'}
+      {isFav ? "♥" : "♡"}
     </button>
   );
 }

@@ -1,17 +1,17 @@
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from "react-redux";
 import {
   selectSearchQuery,
   selectSortBy,
   setSearchQuery,
   setSortBy,
-} from '../../store/productsSlice';
-import './SearchBar.css';
+} from "../../store/productsSlice";
+import "./SearchBar.css";
 
 const SORT_OPTIONS = [
-  { value: 'default', label: 'По умолчанию' },
-  { value: 'price-asc', label: 'Сначала дешевле' },
-  { value: 'price-desc', label: 'Сначала дороже' },
-  { value: 'name-asc', label: 'По названию А–Я' },
+  { value: "default", label: "По умолчанию" },
+  { value: "price-asc", label: "Сначала дешевле" },
+  { value: "price-desc", label: "Сначала дороже" },
+  { value: "name-asc", label: "По названию А–Я" },
 ];
 
 export default function SearchBar() {
@@ -22,19 +22,23 @@ export default function SearchBar() {
   return (
     <div className="search-bar">
       <div className="search-bar-input-wrap">
-        <span className="search-bar-icon" aria-hidden="true">🔍</span>
+        <span className="search-bar-icon" aria-hidden="true">
+          🔍
+        </span>
         <input
           type="search"
           className="search-bar-input"
           placeholder="Поиск товаров…"
           value={query}
+          // TODO - такие хендлеры лучше выносить в отдельные функции
           onChange={(e) => dispatch(setSearchQuery(e.target.value))}
         />
         {query && (
           <button
             type="button"
             className="search-bar-clear"
-            onClick={() => dispatch(setSearchQuery(''))}
+            // TODO - такие хендлеры лучше выносить в отдельные функции
+            onClick={() => dispatch(setSearchQuery(""))}
             aria-label="Очистить поиск"
           >
             ×
@@ -44,6 +48,7 @@ export default function SearchBar() {
       <select
         className="search-bar-sort"
         value={sortBy}
+        // TODO - такие хендлеры лучше выносить в отдельные функции
         onChange={(e) => dispatch(setSortBy(e.target.value))}
         aria-label="Сортировка"
       >

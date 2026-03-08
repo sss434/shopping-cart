@@ -1,6 +1,11 @@
+import { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectProductById } from '../../store/productsSlice';
+import {
+  fetchProducts,
+  selectProductById,
+  selectProductsStatus,
+} from '../../store/productsSlice';
 import { addToCart } from '../../store/cartSlice';
 import FavoriteButton from '../../components/FavoriteButton';
 import './ProductDetail.css';
@@ -8,7 +13,19 @@ import './ProductDetail.css';
 export default function ProductDetail() {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const status = useSelector(selectProductsStatus);
   const product = useSelector(selectProductById(id));
+
+  // Если пользователь открыл страницу напрямую, данных ещё нет
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchProducts());
+    }
+  }, [status, dispatch]);
+
+  if (status === 'loading') {
+    return <div className="pd-skeleton" />;
+  }
 
   if (!product) {
     return (

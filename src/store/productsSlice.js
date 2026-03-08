@@ -1,19 +1,34 @@
-import { createSlice, createSelector } from '@reduxjs/toolkit';
-import { products } from '../data/products';
+import { createSlice, createSelector, createAsyncThunk } from '@reduxjs/toolkit';
 
 /**
- * ФИЧА: Поиск + сортировка
+ * ФИЧА: Загрузка данных через createAsyncThunk
  *
- * Обучающий момент: UI-состояние (то, что пользователь ввёл в поиск,
- * выбранная сортировка) тоже хранится в Redux — это позволяет:
- * - сохранять его между переходами по страницам
- * - легко читать из любого компонента
- * - отображать в Redux DevTools и откатывать через time-travel debugging
+ * Обучающий момент: createAsyncThunk автоматически создаёт три action creator-а:
+ *   fetchProducts.pending   — запрос отправлен
+ *   fetchProducts.fulfilled — ответ получен успешно
+ *   fetchProducts.rejected  — запрос завершился ошибкой
+ *
+ * Их обрабатывает extraReducers — отдельная секция для async actions.
  */
+export const fetchProducts = createAsyncThunk(
+  'products/fetchProducts',
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await fetch('/api/products');
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return await res.json();
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
 const productsSlice = createSlice({
   name: 'products',
   initialState: {
-    items: products,
+    items: [],
+    status: 'idle',   // 'idle' | 'loading' | 'succeeded' | 'failed'
+    error: null,
     searchQuery: '',
     sortBy: 'default', // 'default' | 'price-asc' | 'price-desc' | 'name-asc'
   },
@@ -25,6 +40,25 @@ const productsSlice = createSlice({
       state.sortBy = action.payload;
     },
   },
+  /**
+   * extraReducers обрабатывает actions, созданные вне этого слайса
+   * (в данном случае — три action-а от createAsyncThunk).
+   */
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchProducts.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(fetchProducts.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.items = action.payload;
+      })
+      .addCase(fetchProducts.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload ?? 'Неизвестная ошибка';
+      });
+  },
 });
 
 export const { setSearchQuery, setSortBy } = productsSlice.actions;
@@ -32,6 +66,8 @@ export default productsSlice.reducer;
 
 // --- Базовые селекторы ---
 export const selectProducts = (state) => state.products.items;
+export const selectProductsStatus = (state) => state.products.status;
+export const selectProductsError = (state) => state.products.error;
 export const selectSearchQuery = (state) => state.products.searchQuery;
 export const selectSortBy = (state) => state.products.sortBy;
 
@@ -39,11 +75,8 @@ export const selectProductById = (id) =>
   createSelector(selectProducts, (items) => items.find((p) => p.id === id));
 
 /**
- * ФИЧА: Мемоизированный производный селектор
- *
- * Обучающий момент: createSelector кэширует результат — фильтрация
- * и сортировка НЕ пересчитываются, если searchQuery и sortBy не изменились.
- * Это ключевой паттерн оптимизации в Redux.
+ * Мемоизированный производный селектор.
+ * Фильтрация и сортировка пересчитываются только при изменении входных данных.
  */
 export const selectFilteredProducts = createSelector(
   selectProducts,
