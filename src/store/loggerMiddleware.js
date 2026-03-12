@@ -10,6 +10,7 @@
  * 3. Может делать что угодно до и после next()
  *
  * Открой DevTools → Console чтобы видеть каждый dispatched action.
+ * TODO: Убедиться, что import.meta.env.DEV в production build Vite действительно false, и логи не попадут в прод. Если позже добавится логирование payload, проверить, что в payload нет чувствительных данных (токены, пароли).
  */
 export const loggerMiddleware = (storeAPI) => (next) => (action) => {
   if (import.meta.env.DEV && typeof action.type === 'string') {

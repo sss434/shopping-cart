@@ -14,6 +14,7 @@ import { showNotification } from './notificationsSlice';
  */
 export const listenerMiddleware = createListenerMiddleware();
 
+// TODO: effect не обёрнут в try/catch. Если showNotification или другой код в effect выбросит, ошибка уйдёт в listener; основной action (addToCart) уже применён. Для побочных эффектов лучше оборачивать в try/catch и логировать, не пробрасывая ошибку дальше.
 listenerMiddleware.startListening({
   actionCreator: addToCart,
   effect: (action, api) => {

@@ -4,6 +4,7 @@ const cartSlice = createSlice({
   name: 'cart',
   initialState: { items: [] },
   reducers: {
+    // TODO: Мы мутируем state (existing.quantity += 1, state.items.push) — это корректно только благодаря Immer в RTK. В обычном Redux мутации запрещены. Не смешивать с return { ...state } в том же редьюсере — иначе мутации проигнорируются.
     addToCart: (state, action) => {
       const product = action.payload;
       const existing = state.items.find((i) => i.id === product.id);
@@ -13,6 +14,7 @@ const cartSlice = createSlice({
         state.items.push({ ...product, quantity: 1 });
       }
     },
+    // TODO: Одновременно мутируем item и переприсваиваем state.items. В Immer это ок. В чистом Redux при quantity === 0 нужно было бы вернуть новый state с отфильтрованным массивом без мутаций.
     updateQuantity: (state, action) => {
       const { id, delta } = action.payload;
       const item = state.items.find((i) => i.id === id);

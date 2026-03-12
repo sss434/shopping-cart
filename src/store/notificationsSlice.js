@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 /**
  * ФИЧА: Toast-уведомления
@@ -9,7 +9,7 @@ import { createSlice } from '@reduxjs/toolkit';
  * Redux Toolkit включает redux-thunk по умолчанию.
  */
 const notificationsSlice = createSlice({
-  name: 'notifications',
+  name: "notifications",
   initialState: { list: [] },
   reducers: {
     addNotification: (state, action) => {
@@ -21,7 +21,8 @@ const notificationsSlice = createSlice({
   },
 });
 
-export const { addNotification, removeNotification } = notificationsSlice.actions;
+export const { addNotification, removeNotification } =
+  notificationsSlice.actions;
 export default notificationsSlice.reducer;
 
 export const selectNotifications = (state) => state.notifications.list;
@@ -33,8 +34,14 @@ export const selectNotifications = (state) => state.notifications.list;
  * Обучающий момент: thunk позволяет выполнять побочные эффекты
  * (setTimeout) внутри action creator, не нарушая чистоту Redux.
  */
+// TODO: setTimeout держит замыкание на dispatch.
+// При размонтировании приложения или смене store таймер всё равно сработает
+//  — возможен dispatch после unmount.
+// Рассмотреть: сохранять id таймера и очищать при unmount
+// (например через listenerMiddleware или при destroy store) или не диспатчить
+// removeNotification если store уже недоступен.
 export const showNotification =
-  (message, type = 'success') =>
+  (message, type = "success") =>
   (dispatch) => {
     const id = `${Date.now()}-${Math.random()}`;
     dispatch(addNotification({ id, message, type }));

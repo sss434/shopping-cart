@@ -1,5 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import {
+  fetchProducts,
   selectSearchQuery,
   selectSortBy,
   setSearchQuery,
@@ -49,7 +50,10 @@ export default function SearchBar() {
         className="search-bar-sort"
         value={sortBy}
         // TODO - такие хендлеры лучше выносить в отдельные функции
-        onChange={(e) => dispatch(setSortBy(e.target.value))}
+        onChange={(e) => {
+            dispatch(setSortBy(e.target.value));
+            dispatch(fetchProducts());
+          }}
         aria-label="Сортировка"
       >
         {SORT_OPTIONS.map((opt) => (

@@ -39,6 +39,7 @@ export default function Cart() {
               <p className="cart-item-price">{item.price.toLocaleString('ru-RU')} ₽</p>
             </div>
             <div className="cart-item-actions">
+              {/* TODO: Inline-объект { id, delta } создаётся при каждом рендеру. На работу Redux это не влияет (редьюсер смотрит на payload), но для единообразия и тестирования можно вынести в хелпер createUpdateQuantityPayload(id, delta) или вызывать один раз с переменными. */}
               <button
                 type="button"
                 className="cart-item-btn"

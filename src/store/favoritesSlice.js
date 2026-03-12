@@ -35,7 +35,7 @@ export const selectIsFavorite = (id) => (state) =>
 
 /**
  * Cross-slice selector: объединяет данные из двух слайсов.
- * Это нормальный паттерн — селекторы могут читать любую часть стора.
+ * TODO: Если продукты ещё не загружены (items пустой), а ids пришли из localStorage, результат будет пустой массив — на странице «Избранное» ничего не покажется до загрузки. Рассмотреть: показывать скелетоны по количеству ids или фильтровать только те id, для которых продукт уже есть в state.products.items.
  */
 export const selectFavoriteProducts = createSelector(
   selectProducts,

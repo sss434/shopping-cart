@@ -1,4 +1,8 @@
-import { createSlice, createSelector, createAsyncThunk } from '@reduxjs/toolkit';
+import {
+  createSlice,
+  createSelector,
+  createAsyncThunk,
+} from "@reduxjs/toolkit";
 
 /**
  * ФИЧА: Загрузка данных через createAsyncThunk
@@ -10,27 +14,45 @@ import { createSlice, createSelector, createAsyncThunk } from '@reduxjs/toolkit'
  *
  * Их обрабатывает extraReducers — отдельная секция для async actions.
  */
+/**
+ * json-server 1.0 beta: _like убран, сортировка через _sort=-field (минус = desc).
+ * Поиск по title делаем на клиенте в selectFilteredProducts.
+ */
+const buildProductsUrl = (sortBy) => {
+  if (sortBy === "default") return "/api/products";
+  const params = new URLSearchParams();
+  if (sortBy === "price-asc") params.set("_sort", "price");
+  else if (sortBy === "price-desc") params.set("_sort", "-price");
+  else if (sortBy === "name-asc") params.set("_sort", "title");
+  const qs = params.toString();
+  return `/api/products?${qs}`;
+};
+
 export const fetchProducts = createAsyncThunk(
-  'products/fetchProducts',
-  async (_, { rejectWithValue }) => {
+  "products/fetchProducts",
+  // TODO: Нет отмены запроса при размонтировании компонента или при повторном вызове fetchProducts (race). Добавить AbortController, передавать signal в fetch и вызывать abort при unmount или в condition; в rejected обрабатывать AbortError и не класть ошибку в state.
+  async (_, { getState, rejectWithValue }) => {
     try {
-      const res = await fetch('/api/products');
+      const { sortBy } = getState().products;
+      const url = buildProductsUrl(sortBy);
+      const res = await fetch(url);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      return await res.json();
+      const data = await res.json();
+      return data;
     } catch (err) {
       return rejectWithValue(err.message);
     }
-  }
+  },
 );
 
 const productsSlice = createSlice({
-  name: 'products',
+  name: "products",
   initialState: {
     items: [],
-    status: 'idle',   // 'idle' | 'loading' | 'succeeded' | 'failed'
+    status: "idle", // 'idle' | 'loading' | 'succeeded' | 'failed'
     error: null,
-    searchQuery: '',
-    sortBy: 'default', // 'default' | 'price-asc' | 'price-desc' | 'name-asc'
+    searchQuery: "",
+    sortBy: "default", // 'default' | 'price-asc' | 'price-desc' | 'name-asc'
   },
   reducers: {
     setSearchQuery: (state, action) => {
@@ -47,16 +69,18 @@ const productsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchProducts.pending, (state) => {
-        state.status = 'loading';
+        state.status = "loading";
         state.error = null;
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.status = "succeeded";
+        // TODO: При пагинации не заменять items целиком, а мержить (append/replace page).
+        // Сейчас полная замена — ок для одного списка.
         state.items = action.payload;
       })
       .addCase(fetchProducts.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload ?? 'Неизвестная ошибка';
+        state.status = "failed";
+        state.error = action.payload ?? "Неизвестная ошибка";
       });
   },
 });
@@ -71,34 +95,17 @@ export const selectProductsError = (state) => state.products.error;
 export const selectSearchQuery = (state) => state.products.searchQuery;
 export const selectSortBy = (state) => state.products.sortBy;
 
+// TODO: Параметризованный селектор — при каждом новом id создаётся новая функция-селектор. В useSelector это может давать лишние перерасчёты при смене id (например при навигации). Рассмотреть useMemo(() => selectProductById(id), [id]) в компоненте.
 export const selectProductById = (id) =>
   createSelector(selectProducts, (items) => items.find((p) => p.id === id));
 
-/**
- * Мемоизированный производный селектор.
- * Фильтрация и сортировка пересчитываются только при изменении входных данных.
- */
+/** Сортировка с бэка (json-server _sort). Поиск по title — на клиенте (в v1 beta _like убран). */
 export const selectFilteredProducts = createSelector(
   selectProducts,
   selectSearchQuery,
-  selectSortBy,
-  (items, query, sortBy) => {
-    let result = items;
-
-    if (query.trim()) {
-      const q = query.toLowerCase();
-      result = result.filter((p) => p.title.toLowerCase().includes(q));
-    }
-
-    switch (sortBy) {
-      case 'price-asc':
-        return [...result].sort((a, b) => a.price - b.price);
-      case 'price-desc':
-        return [...result].sort((a, b) => b.price - a.price);
-      case 'name-asc':
-        return [...result].sort((a, b) => a.title.localeCompare(b.title, 'ru'));
-      default:
-        return result;
-    }
-  }
+  (items, query) => {
+    if (!query.trim()) return items;
+    const q = query.toLowerCase();
+    return items.filter((p) => p.title.toLowerCase().includes(q));
+  },
 );

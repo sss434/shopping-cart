@@ -1,10 +1,10 @@
-import { configureStore } from '@reduxjs/toolkit';
-import cartReducer from './cartSlice';
-import productsReducer from './productsSlice';
-import favoritesReducer from './favoritesSlice';
-import notificationsReducer from './notificationsSlice';
-import { listenerMiddleware } from './listenerMiddleware';
-import { loggerMiddleware } from './loggerMiddleware';
+import { configureStore } from "@reduxjs/toolkit";
+import cartReducer from "./cartSlice";
+import productsReducer from "./productsSlice";
+import favoritesReducer from "./favoritesSlice";
+import notificationsReducer from "./notificationsSlice";
+import { listenerMiddleware } from "./listenerMiddleware";
+import { loggerMiddleware } from "./loggerMiddleware";
 
 // --- localStorage helpers ---
 function load(key) {
@@ -16,17 +16,9 @@ function load(key) {
   }
 }
 
-function save(key, value) {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    // ignore
-  }
-}
-
 // --- Preloaded state из localStorage ---
-const savedCart = load('redux-cart');
-const savedFavorites = load('redux-favorites');
+const savedCart = load("redux-cart");
+const savedFavorites = load("redux-favorites");
 
 export const store = configureStore({
   reducer: {
@@ -53,11 +45,4 @@ export const store = configureStore({
     getDefaultMiddleware()
       .prepend(listenerMiddleware.middleware)
       .concat(loggerMiddleware),
-});
-
-// --- Persist при каждом изменении стора ---
-store.subscribe(() => {
-  const state = store.getState();
-  save('redux-cart', state.cart.items);
-  save('redux-favorites', state.favorites.ids);
 });

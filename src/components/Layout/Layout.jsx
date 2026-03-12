@@ -1,11 +1,12 @@
-import { Link, Outlet } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectTotalItems } from '../../store/cartSlice';
-import { selectFavoritesCount } from '../../store/favoritesSlice';
-import Notifications from '../Notifications';
-import './Layout.css';
+import { Link, Outlet } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectTotalItems } from "../../store/cartSlice";
+import { selectFavoritesCount } from "../../store/favoritesSlice";
+import Notifications from "../Notifications";
+import "./Layout.css";
 
 export default function Layout() {
+  // TODO: при изменении totalItems или favCount ререндерится весь проект, что не нужно
   const totalItems = useSelector(selectTotalItems);
   const favCount = useSelector(selectFavoritesCount);
 
@@ -19,7 +20,9 @@ export default function Layout() {
           <Link to="/favorites" className="layout-nav-link">
             Избранное
             {favCount > 0 && (
-              <span className="layout-nav-badge layout-nav-badge--fav">{favCount}</span>
+              <span className="layout-nav-badge layout-nav-badge--fav">
+                {favCount}
+              </span>
             )}
           </Link>
           <Link to="/cart" className="layout-nav-link">

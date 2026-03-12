@@ -16,7 +16,7 @@ export default function ProductDetail() {
   const status = useSelector(selectProductsStatus);
   const product = useSelector(selectProductById(id));
 
-  // Если пользователь открыл страницу напрямую, данных ещё нет
+  // TODO: И Catalog, и ProductDetail при status === 'idle' вызывают fetchProducts(). При быстром переключении маршрута оба могут успеть смонтироваться — возможны два параллельных запроса и race (последний ответ перезапишет первый). Рассмотреть: единая точка загрузки (Layout/App), condition в createAsyncThunk (не диспатчить если запрос уже в полёте) или отмена предыдущего запроса через AbortController.
   useEffect(() => {
     if (status === 'idle') {
       dispatch(fetchProducts());
